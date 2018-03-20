@@ -1,3 +1,9 @@
 <resources>
-    <string name="app_name">ContactsAvatar</string>
+    <string name="app_name">AvatarContacts</string>
+    <string name="loading_contacts">Loading contacts...</string>
+    <string name="cd_avatar_image_of_the_contact">Avatar image of the contact</string>
+    <string name="cd_name_of_the_contact">Name of the contact</string>
+    <string name="cd_e_mail_of_the_contact">E-mail of the contact</string>
+    <string name="cd_phone_number_of_the_contact">Phone number of the contact</string>
+    <string name="cd_list_of_contacts">List of contacts</string>
 </resources>
