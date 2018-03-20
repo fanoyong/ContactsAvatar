@@ -11,6 +11,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
+import com.grammarly.avatarcontacts.AvatarContactApp;
 import com.grammarly.avatarcontacts.R;
 import com.grammarly.avatarcontacts.model.Contact;
 
@@ -49,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         requestPermission();
+        //((AvatarContactApp) getApplication()).getRepository().fetchContactsFromLocal(getApplicationContext(), ((AvatarContactApp) getApplication()).getAppExecutors());
     }
 
     private void requestPermission() {
@@ -85,10 +87,9 @@ public class MainActivity extends AppCompatActivity {
             case PERMISSIONS_REQUEST_READ_CONTACTS: {
                 if (grantResults.length > 0 &&
                         grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                    // TODO Initiate ContactsFetcher here
+                    ((AvatarContactApp) getApplication()).getRepository().fetchContactsFromLocal(getApplicationContext(), ((AvatarContactApp) getApplication()).getAppExecutors());
                 } else {
-                    // TODO Maybe continue?
+                    // no-op
                 }
                 return;
             }

@@ -1,40 +1,57 @@
 package com.grammarly.avatarcontacts.db;
 
+import android.Manifest;
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.provider.ContactsContract;
+import android.support.v4.content.ContextCompat;
+import android.util.Log;
+
 import com.grammarly.avatarcontacts.db.entity.ContactEntity;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+
+import static android.provider.ContactsContract.Contacts;
 
 /**
  * Main source of truth that fetches contacts from local contacts DB. For early stage of
  * implementation it will use fake user data generated manually
  */
 public class ContactsFetcher {
-    private static final String[]
-            FIRST =
-            new String[]{"Special edition", "New", "Cheap", "Quality", "Used"};
-    private static final String[]
-            SECOND =
-            new String[]{"Three-headed Monkey", "Rubber Chicken", "Pint of Grog", "Monocle"};
 
-    // TODO Remove this once plug in for actual contacts DB is done
-    public static List<ContactEntity> generateContacts() {
-        List<ContactEntity> contacts = new ArrayList<>(FIRST.length * SECOND.length);
+    private static final String TAG = "ContactsFetcher";
 
-        for (int i = 0; i < FIRST.length; i++) {
-            for (int j = 0; j < SECOND.length; j++) {
-                ContactEntity contact = new ContactEntity();
-                contact.setName(FIRST[i] + " " + SECOND[j]);
-                contact.setEmail("asdasd@aslkdmalskdjalksdjalksdj.com");
-                contact.setPhoneNumber("123123123");
-                String
-                        identifier =
-                        contact.getName() + contact.getEmail() + contact.getPhoneNumber();
-                contact.setAvatarUrl("https://api.adorable.io/avatars/100/" +
-                                             identifier.hashCode());
-                contacts.add(contact);
-            }
+
+    public static List<ContactEntity> fetchContacts(Context context) {
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CONTACTS) !=
+                PackageManager.PERMISSION_GRANTED) {
+            return Collections.emptyList();
         }
+        Cursor cur = context.getContentResolver().query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
+        final int colId = cur.getColumnIndex(Contacts._ID);
+        final int colName = cur.getColumnIndex(Contacts.DISPLAY_NAME);
+        List<ContactEntity> contacts = new ArrayList<>();
+        Log.v(TAG, "count:" + cur.getCount());
+        while (cur.moveToNext()) {
+            ContactEntity contact = new ContactEntity();
+            contact.setId(cur.getInt(colId));
+            contact.setName(cur.getString(colName));
+            contact.setEmail("email@email.com");
+            contact.setPhoneNumber("1231231234");
+            String
+                    identifier =
+                    contact.getName() + contact.getEmail() + contact.getPhoneNumber();
+
+            String avatarUrl = "https://api.adorable.io/avatars/100/" +
+                    identifier.hashCode();
+            Log.v(TAG, "avatarUrl:" + avatarUrl);
+            contact.setAvatarUrl(avatarUrl);
+            contacts.add(contact);
+        }
+
         return contacts;
     }
 }

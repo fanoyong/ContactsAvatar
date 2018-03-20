@@ -38,6 +38,7 @@ public abstract class AppDatabase extends RoomDatabase {
         return sInstance;
     }
 
+
     /**
      * Build the database. {@link Builder#build()} only sets up the database configuration and
      * creates a new instance of the database.
@@ -45,6 +46,7 @@ public abstract class AppDatabase extends RoomDatabase {
      */
     private static AppDatabase buildDatabase(final Context appContext,
                                              final AppExecutors executors) {
+
         return Room
                 .databaseBuilder(appContext, AppDatabase.class, DATABASE_NAME)
                 .addCallback(new Callback() {
@@ -54,7 +56,7 @@ public abstract class AppDatabase extends RoomDatabase {
                         executors.diskIO().execute(() -> {
                             // Generate the data for pre-population
                             AppDatabase database = AppDatabase.getInstance(appContext, executors);
-                            List<ContactEntity> contacts = ContactsFetcher.generateContacts();
+                            List<ContactEntity> contacts = ContactsFetcher.fetchContacts(appContext);
                             insertData(database, contacts);
                             // notify that the database was created and it's ready to be used
                             database.setDatabaseCreated();
@@ -78,6 +80,17 @@ public abstract class AppDatabase extends RoomDatabase {
         database.runInTransaction(() -> {
             database.contactDao().insertAll(contacts);
         });
+    }
+
+    public void insertDataFromLocalContacts(final Context context, final AppExecutors executors) {
+        synchronized (AppDatabase.class) {
+            executors.diskIO().execute(() -> {
+                AppDatabase database = AppDatabase.getInstance(context, executors);
+                List<ContactEntity> contacts = ContactsFetcher.fetchContacts(context);
+                insertData(database, contacts);
+                database.updateDatabaseCreated(context);
+            });
+        }
     }
 
     public LiveData<Boolean> getDatabaseCreated() {

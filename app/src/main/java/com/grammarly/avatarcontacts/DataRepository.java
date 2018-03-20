@@ -2,6 +2,7 @@ package com.grammarly.avatarcontacts;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MediatorLiveData;
+import android.content.Context;
 
 import com.grammarly.avatarcontacts.db.AppDatabase;
 import com.grammarly.avatarcontacts.db.entity.ContactEntity;
@@ -33,6 +34,10 @@ public class DataRepository {
             }
         }
         return sInstance;
+    }
+
+    public void fetchContactsFromLocal(Context context, AppExecutors appExecutors) {
+        mDatabase.insertDataFromLocalContacts(context, appExecutors);
     }
 
     public LiveData<List<ContactEntity>> getContacts() {

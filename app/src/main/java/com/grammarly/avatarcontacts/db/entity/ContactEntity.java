@@ -19,9 +19,9 @@ public class ContactEntity implements Contact {
     private String mName;
     @ColumnInfo(name = "email")
     private String mEmail;
-    @ColumnInfo(name = "phonenumber")
+    @ColumnInfo(name = "phoneNumber")
     private String mPhoneNumber;
-    @ColumnInfo(name = "avatarurl")
+    @ColumnInfo(name = "avatarUrl")
     private String mAvatarUrl;
 
     @Override

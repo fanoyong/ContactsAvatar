@@ -17,6 +17,10 @@ public class AvatarContactApp extends Application {
         mAppExecutors = new AppExecutors();
     }
 
+    public AppExecutors getAppExecutors() {
+        return mAppExecutors;
+    }
+
     public AppDatabase getDatabase() {
         return AppDatabase.getInstance(this, mAppExecutors);
     }
