@@ -1,6 +1,8 @@
 package com.grammarly.avatarcontacts.db.entity;
 
+import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 
 import com.grammarly.avatarcontacts.model.Contact;
@@ -11,73 +13,80 @@ import com.grammarly.avatarcontacts.model.Contact;
 @Entity(tableName = "contacts")
 public class ContactEntity implements Contact {
     @PrimaryKey(autoGenerate = true)
-    private int id;
-    private String name;
-    private String email;
-    private String phoneNumber;
-    private String avatarUrl;
+    @ColumnInfo(name = "id")
+    private int mId;
+    @ColumnInfo(name = "name")
+    private String mName;
+    @ColumnInfo(name = "email")
+    private String mEmail;
+    @ColumnInfo(name = "phonenumber")
+    private String mPhoneNumber;
+    @ColumnInfo(name = "avatarurl")
+    private String mAvatarUrl;
 
     @Override
     public int getId() {
-        return id;
+        return mId;
     }
 
     public void setId(int id) {
-        this.id = id;
+        mId = id;
     }
 
     @Override
     public String getName() {
-        return name;
+        return mName;
     }
 
     public void setName(String name) {
-        this.name = name;
+        mName = name;
     }
 
     @Override
     public String getEmail() {
-        return email;
+        return mEmail;
     }
 
     public void setEmail(String email) {
-        this.email = email;
+        mEmail = email;
     }
 
     @Override
     public String getPhoneNumber() {
-        return phoneNumber;
+        return mPhoneNumber;
     }
 
     public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+        mPhoneNumber = phoneNumber;
     }
 
     @Override
     public String getAvatarUrl() {
-        return avatarUrl;
+        return mAvatarUrl;
     }
 
     public void setAvatarUrl(String avatarUrl) {
-        this.avatarUrl = avatarUrl;
+        mAvatarUrl = avatarUrl;
     }
 
+    @Ignore
     public ContactEntity() {
     }
 
     public ContactEntity(int id, String name, String email, String phoneNumber, String avatarUrl) {
-        this.id = id;
-        this.name = name;
-        this.email = email;
-        this.phoneNumber = phoneNumber;
-        this.avatarUrl = avatarUrl;
+        mId = id;
+        mName = name;
+        mEmail = email;
+        mPhoneNumber = phoneNumber;
+        mAvatarUrl = avatarUrl;
     }
 
+    @Ignore
     public ContactEntity(Contact contact) {
-        id = contact.getId();
-        name = contact.getName();
-        email = contact.getEmail();
-        phoneNumber = contact.getPhoneNumber();
-        avatarUrl = contact.getAvatarUrl();
+        mId = contact.getId();
+        mName = contact.getName();
+        mEmail = contact.getEmail();
+        mPhoneNumber = contact.getPhoneNumber();
+        mAvatarUrl = contact.getAvatarUrl();
     }
 }
