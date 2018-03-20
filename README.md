@@ -20,6 +20,11 @@ Using Android's [data binding library](https://developer.android.com/topic/libra
 - For initial `RecyclerView` (`ContactListFragment`) is bind from `contact_item.xml`'s variable `contact` and `callback`.
 - For detailed contact view, `ContactFragment` is bind from `contact_fragment.xml`'s variable `ContactViewModel`.
 
+## Misc.
+Along with basic requirement, it has following extensions
+- Contact detail fragment will send proper intent based on user's interaction. (e.g. click on phone number will trigger dialer) 
+
+
 ## Dependencies
 Following libraries were used while working on this task:
 - Android Architecture Components

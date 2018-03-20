@@ -7,7 +7,6 @@ import android.database.Cursor;
 import android.provider.ContactsContract;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
-
 import com.grammarly.avatarcontacts.db.entity.ContactEntity;
 
 import java.util.ArrayList;
@@ -17,13 +16,11 @@ import java.util.List;
 import static android.provider.ContactsContract.Contacts;
 
 /**
- * Main source of truth that fetches contacts from local contacts DB. For early stage of
- * implementation it will use fake user data generated manually
+ * Main source of truth that fetches contacts from local contacts DB.
  */
 public class ContactsFetcher {
 
     private static final String TAG = "ContactsFetcher";
-
 
     public static List<ContactEntity> fetchContacts(Context context) {
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CONTACTS) !=

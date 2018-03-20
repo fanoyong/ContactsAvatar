@@ -1,14 +1,16 @@
 package com.grammarly.avatarcontacts.ui;
 
+import android.arch.lifecycle.Lifecycle;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.grammarly.avatarcontacts.R;
 import com.grammarly.avatarcontacts.databinding.ContactFragmentBinding;
 import com.grammarly.avatarcontacts.viewmodel.ContactViewModel;
@@ -43,6 +45,8 @@ public class ContactFragment extends Fragment {
                 ViewModelProviders.of(this, factory).get(ContactViewModel.class);
 
         mBinding.setContactViewModel(model);
+        mBinding.setCallbackEmailAddress(mEmailClickCallback);
+        mBinding.setCallbackPhoneNumber(mPhoneNumberClickCallback);
 
         subscribeToModel(model);
     }
@@ -60,5 +64,36 @@ public class ContactFragment extends Fragment {
         args.putInt(KEY_CONTACT_ID, contactId);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    private final PhoneNumberClickCallback mPhoneNumberClickCallback = new PhoneNumberClickCallback() {
+        @Override
+        public void onClick() {
+            if (getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.STARTED)) {
+                final Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse("tel:" + mBinding.getContactViewModel().mContact.get().getPhoneNumber()));
+                maybeSendIntent(intent);
+            }
+        }
+    };
+
+
+    private final EmailClickCallback mEmailClickCallback = new EmailClickCallback() {
+        @Override
+        public void onClick() {
+            if (getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.STARTED)) {
+                final Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("text/html");
+                intent.putExtra(Intent.EXTRA_EMAIL, mBinding.getContactViewModel().mContact.get().getEmail());
+                maybeSendIntent(intent);
+            }
+        }
+    };
+
+    private void maybeSendIntent(final Intent intent) {
+        // Check if intent can be resolved
+        if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+            startActivity(Intent.createChooser(intent, "AvatarContacts"));
+        }
     }
 }

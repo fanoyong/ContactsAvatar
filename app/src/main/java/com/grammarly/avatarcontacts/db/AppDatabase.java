@@ -9,7 +9,6 @@ import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
-
 import com.grammarly.avatarcontacts.AppExecutors;
 import com.grammarly.avatarcontacts.db.dao.ContactDao;
 import com.grammarly.avatarcontacts.db.entity.ContactEntity;
@@ -40,7 +39,7 @@ public abstract class AppDatabase extends RoomDatabase {
 
 
     /**
-     * Build the database. {@link Builder#build()} only sets up the database configuration and
+     * Build the database. {@link Builder#build()} sets up the database configuration and
      * creates a new instance of the database.
      * The SQLite database is only created when it's accessed for the first time.
      */
@@ -54,7 +53,6 @@ public abstract class AppDatabase extends RoomDatabase {
                     public void onCreate(@NonNull SupportSQLiteDatabase db) {
                         super.onCreate(db);
                         executors.diskIO().execute(() -> {
-                            // Generate the data for pre-population
                             AppDatabase database = AppDatabase.getInstance(appContext, executors);
                             List<ContactEntity> contacts = ContactsFetcher.fetchContacts(appContext);
                             insertData(database, contacts);
