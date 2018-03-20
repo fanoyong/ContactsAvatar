@@ -8,6 +8,8 @@ import android.arch.lifecycle.ViewModelProvider;
 import android.databinding.ObservableField;
 import android.support.annotation.NonNull;
 
+import com.grammarly.avatarcontacts.AvatarContactApp;
+import com.grammarly.avatarcontacts.DataRepository;
 import com.grammarly.avatarcontacts.db.entity.ContactEntity;
 
 public class ContactViewModel extends AndroidViewModel {
@@ -15,11 +17,13 @@ public class ContactViewModel extends AndroidViewModel {
     public ObservableField<ContactEntity> mContact = new ObservableField<>();
     private final int mContactId;
 
-    public ContactViewModel(@NonNull Application application, final int contactId) {
+    public ContactViewModel(@NonNull Application application,
+                            DataRepository repository,
+                            final int contactId) {
         super(application);
         mContactId = contactId;
-        // TODO Connect with repository
-        mObservableContact = null;
+
+        mObservableContact = repository.loadContact(mContactId);
     }
 
     /**
@@ -43,18 +47,18 @@ public class ContactViewModel extends AndroidViewModel {
         @NonNull
         private final Application mApplication;
         private final int mContactId;
-        // TODO Connect with repository
+        private final DataRepository mRepository;
 
         public Factory(@NonNull Application application, int contactId) {
             mApplication = application;
             mContactId = contactId;
-            // TODO Connect with repository
+            mRepository = ((AvatarContactApp) application).getRepository();
         }
 
         @Override
         public <T extends ViewModel> T create(Class<T> modelClass) {
-            // TODO Connect with repository
-            return (T) new ContactViewModel(mApplication, mContactId);
+            //noinspection unchecked
+            return (T) new ContactViewModel(mApplication, mRepository, mContactId);
         }
     }
 }

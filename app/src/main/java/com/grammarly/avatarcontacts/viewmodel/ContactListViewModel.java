@@ -5,6 +5,7 @@ import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MediatorLiveData;
 
+import com.grammarly.avatarcontacts.AvatarContactApp;
 import com.grammarly.avatarcontacts.db.entity.ContactEntity;
 
 import java.util.List;
@@ -20,7 +21,12 @@ public class ContactListViewModel extends AndroidViewModel {
         // set by default null, until we get data from the database.
         mObservableContacts.setValue(null);
 
-        // TODO Connect with repository
+        LiveData<List<ContactEntity>>
+                contacts =
+                ((AvatarContactApp) application).getRepository().getContacts();
+
+        // observe the changes of the contacts from the database and forward them
+        mObservableContacts.addSource(contacts, mObservableContacts::setValue);
     }
 
     public LiveData<List<ContactEntity>> getContacts() {

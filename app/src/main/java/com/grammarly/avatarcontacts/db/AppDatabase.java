@@ -10,6 +10,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 
+import com.grammarly.avatarcontacts.AppExecutors;
 import com.grammarly.avatarcontacts.db.dao.ContactDao;
 import com.grammarly.avatarcontacts.db.entity.ContactEntity;
 
@@ -25,11 +26,11 @@ public abstract class AppDatabase extends RoomDatabase {
 
     private final MutableLiveData<Boolean> mIsDatabaseCreated = new MutableLiveData<>();
 
-    public static AppDatabase getInstance(final Context context) {
+    public static AppDatabase getInstance(final Context context, final AppExecutors executors) {
         if (sInstance == null) {
             synchronized (AppDatabase.class) {
                 if (sInstance == null) {
-                    sInstance = buildDatabase(context.getApplicationContext());
+                    sInstance = buildDatabase(context.getApplicationContext(), executors);
                     sInstance.updateDatabaseCreated(context.getApplicationContext());
                 }
             }
@@ -42,24 +43,22 @@ public abstract class AppDatabase extends RoomDatabase {
      * creates a new instance of the database.
      * The SQLite database is only created when it's accessed for the first time.
      */
-    private static AppDatabase buildDatabase(final Context appContext) {
+    private static AppDatabase buildDatabase(final Context appContext,
+                                             final AppExecutors executors) {
         return Room
                 .databaseBuilder(appContext, AppDatabase.class, DATABASE_NAME)
                 .addCallback(new Callback() {
                     @Override
                     public void onCreate(@NonNull SupportSQLiteDatabase db) {
                         super.onCreate(db);
-                        // TODO Utilize executor pattern
-                        new Runnable() {
-                            @Override
-                            public void run() {
-                                AppDatabase database = AppDatabase.getInstance(appContext);
-                                List<ContactEntity> contacts = ContactsFetcher.generateContacts();
-                                insertData(database, contacts);
-                                // notify that the database was created and it's ready to be used
-                                database.setDatabaseCreated();
-                            }
-                        };
+                        executors.diskIO().execute(() -> {
+                            // Generate the data for pre-population
+                            AppDatabase database = AppDatabase.getInstance(appContext, executors);
+                            List<ContactEntity> contacts = ContactsFetcher.generateContacts();
+                            insertData(database, contacts);
+                            // notify that the database was created and it's ready to be used
+                            database.setDatabaseCreated();
+                        });
                     }
                 })
                 .build();
