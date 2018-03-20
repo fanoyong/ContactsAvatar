@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 27
     defaultConfig {
-        applicationId "com.grammarly.contactsavatar"
+        applicationId "com.grammarly.avatarcontacts"
         minSdkVersion 21
         targetSdkVersion 21
         versionCode 1

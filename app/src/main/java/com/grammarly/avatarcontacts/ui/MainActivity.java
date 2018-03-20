@@ -10,7 +10,9 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+
 import com.grammarly.avatarcontacts.R;
+import com.grammarly.avatarcontacts.model.Contact;
 
 public class MainActivity extends AppCompatActivity {
     private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 65535;
@@ -21,6 +23,26 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
         mContainer = findViewById(R.id.fragment_container);
+
+        if (savedInstanceState == null) {
+            ContactListFragment fragment = new ContactListFragment();
+
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.fragment_container, fragment, ContactListFragment.TAG)
+                    .commit();
+        }
+    }
+
+    public void show(Contact contact) {
+
+        ContactFragment contactFragment = ContactFragment.forContact(contact.getId());
+
+        getSupportFragmentManager()
+                .beginTransaction()
+                .addToBackStack("mContact")
+                .replace(R.id.fragment_container, contactFragment, null)
+                .commit();
     }
 
     @Override
