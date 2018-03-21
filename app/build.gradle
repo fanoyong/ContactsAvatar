@@ -1,32 +1,32 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion build_versions.target_sdk
+    buildToolsVersion build_versions.build_tools
+
     defaultConfig {
-        applicationId "com.grammarly.avatarcontacts"
-        minSdkVersion 21
-        targetSdkVersion 27
+        applicationId 'com.grammarly.avatarcontacts'
+        minSdkVersion build_versions.min_sdk
+        targetSdkVersion build_versions.target_sdk
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
-    // Use Data Binding library
     dataBinding {
         enabled = true
     }
+    productFlavors {
+    }
 
-    // Always show the result of every unit test, even if it passes.
-    testOptions.unitTests.all {
-        testLogging {
-            events 'passed', 'skipped', 'failed', 'standardOut', 'standardError'
-        }
+    lintOptions {
+        abortOnError false
     }
 
     compileOptions {
@@ -51,12 +51,6 @@ dependencies {
 
     // Picasso
     implementation deps.picasso
-
-    // Local Unit test
-    androidTestImplementation deps.junit
-    androidTestImplementation deps.mockito.core
-    androidTestImplementation deps.mockito.all
-    androidTestImplementation deps.hamcrest
 
     // Android Testing Support Library's runner and rules
     androidTestImplementation deps.atsl.runner

@@ -9,4 +9,5 @@
     <string name="name">Name</string>
     <string name="e_mail">E-mail</string>
     <string name="phone_number">Phone #</string>
+    <string name="cd_contact_detail">Contact detail</string>
 </resources>
