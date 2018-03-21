@@ -1,7 +1,6 @@
 package com.grammarly.avatarcontacts;
 
 import android.app.Application;
-
 import com.grammarly.avatarcontacts.db.AppDatabase;
 
 /**
@@ -15,6 +14,10 @@ public class AvatarContactApp extends Application {
         super.onCreate();
 
         mAppExecutors = new AppExecutors();
+
+        // Try to fetch local contacts DB on application create.
+        // This will be ignored for the 'first' time since it does not have permission
+        getRepository().fetchContactsFromLocal(getApplicationContext(), mAppExecutors);
     }
 
     public AppExecutors getAppExecutors() {

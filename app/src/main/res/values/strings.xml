@@ -6,4 +6,7 @@
     <string name="cd_e_mail_of_the_contact">E-mail of the contact</string>
     <string name="cd_phone_number_of_the_contact">Phone number of the contact</string>
     <string name="cd_list_of_contacts">List of contacts</string>
+    <string name="name">Name</string>
+    <string name="e_mail">E-mail</string>
+    <string name="phone_number">Phone #</string>
 </resources>

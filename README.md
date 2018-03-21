@@ -22,8 +22,17 @@ Using Android's [data binding library](https://developer.android.com/topic/libra
 
 ## Misc.
 Along with basic requirement, it has following extensions
-- Contact detail fragment will send proper intent based on user's interaction. (e.g. click on phone number will trigger dialer) 
-
+- Contact detail fragment will send proper intent based on user's interaction. (e.g. click on phone number will trigger dialer)
+- Contact Fetch strategy: 
+    - There are ways of detecting real time local contact DB change by running a service that registers `ContentObserver` for contact DB URI. However, for this task, this seems very "overkill" given contact DB change does not happen all the time.
+    - Instead of the above approach, this app will fetch local contact DB when `Application` is created (`onCreate()`). I believe this is fair enough for 99% of use cases. 
+- For sake of this task, following assumptions were used while accessing local contact DB
+    - It will only query default contact db, not accessing external account (e.g. Google contacts)
+    - It will use `Contacts.DISPLAY_NAME` for name
+    - it will use following strategy to get both phone number and email address
+        - If there exist multiple types of data, it will use whichever first appears in order of `Type.Mobile`, `Type.Home`,  `Type.Work`, etc.
+        - If none of them exists, it will use default text "Not available";
+    - Avatar URL is calculated using hash code of concatenated string of id / name / email / phone number 
 
 ## Dependencies
 Following libraries were used while working on this task:
